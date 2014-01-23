@@ -1,0 +1,2 @@
+dev_mount sdcard /storage/sdcard1 4 /devices/platform/omap/omap_hsmmc.0/mmc_host/mmc0
+dev_mount usb /storage/usb1 auto /devices/platform/omap/musb-ti81xx/musb-hdrc.1/usb1

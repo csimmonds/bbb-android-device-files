@@ -1,0 +1,80 @@
+import init.am335xevm.usb.rc
+
+on early-init
+    mount debugfs debugfs /sys/kernel/debug
+
+on init
+    # See storage config details at http://source.android.com/tech/storage/
+    mkdir /mnt/shell/emulated 0700 shell shell
+    mkdir /storage/emulated 0555 root root
+
+    export EXTERNAL_STORAGE /storage/emulated/legacy
+    export EMULATED_STORAGE_SOURCE /mnt/shell/emulated
+    export EMULATED_STORAGE_TARGET /storage/emulated
+
+    # Support legacy paths
+    symlink /storage/emulated/legacy /sdcard
+    symlink /storage/emulated/legacy /mnt/sdcard
+    symlink /storage/emulated/legacy /storage/sdcard0
+    symlink /mnt/shell/emulated/0 /storage/emulated/legacy
+
+    # create directory for mounting usb drives
+    mkdir /storage/usb1 0666 system system
+    symlink /storage/usb1 /usbdrive
+    symlink /storage/usb1 /mnt/usb1
+
+on post-fs-data
+    mkdir /data/misc/dhcp 0770 dhcp dhcp
+    chown dhcp dhcp /data/misc/dhcp
+
+    mkdir /data/misc/camera 0770 media media
+
+    # we will remap this as /storage/sdcard0 with the sdcard fuse tool
+    mkdir /data/media 0770 media_rw media_rw
+    chown media_rw media_rw /data/media
+
+    # Set indication (checked by vold) that we have finished this action
+    setprop vold.post_fs_data_done 1
+
+on boot
+# Boost cpu speed to 1GHz
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_setspeed 1000000
+
+# Default Read Ahead value for sdcards
+    write /sys/block/mmcblk0/queue/read_ahead_kb 2048
+
+# PWM-Backlight for display brightness on LCD7 Cape
+    chmod 0666 /sys/class/backlight/pwm-backlight/brightness
+# PWM-Backlight for display brightness on LCD3 Cape
+    chmod 0666 /sys/class/backlight/tps65217-bl/brightness
+
+on fs
+    mount_all /fstab.am335xevm
+
+    # This board does not have battery, force battery-level to 100%
+    setprop hw.nobattery true
+
+    # Set Camera permission
+    chmod 0666 /dev/video0
+    chown root root /dev/video0
+
+service pvr /system/bin/sgx/rc.pvr start
+    class core
+    oneshot
+
+service dhcpcd_eth0 /system/bin/dhcpcd -ABKL -f/system/etc/dhcpcd/dhcpcd.conf
+    disabled
+    oneshot
+
+service iprenew_eth0 /system/bin/dhcpcd -n
+    disabled
+    oneshot
+
+# virtual sdcard daemon running as media_rw (1023)
+service sdcard /system/bin/sdcard /data/media /mnt/shell/emulated 1023 1023
+    class late_start
+
+# VNC Server service
+service androidvncserver /system/bin/androidvncserver
+    disabled
+    oneshot

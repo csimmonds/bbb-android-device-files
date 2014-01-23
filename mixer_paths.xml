@@ -1,0 +1,14 @@
+<mixer>
+  <!-- These are the initial mixer settings -->
+  <!-- Nothing to do for now -->
+
+  <path name="speaker">
+  </path>
+
+  <path name="headphone">
+  </path>
+
+
+  <path name="headset-mic">
+   </path>
+</mixer>
