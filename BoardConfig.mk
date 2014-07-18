@@ -13,7 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-BOARD_EGL_CFG := device/ti/beagleboneblack/egl.cfg
+
+COMMON_GLOBAL_CFLAGS += -DWORKAROUND_BUG_10194508=1
 
 # Use beaglebone camera cape as default
 BOARD_HAVE_CAMERA_CAPE := true
