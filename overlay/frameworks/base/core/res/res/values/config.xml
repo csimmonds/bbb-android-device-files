@@ -71,7 +71,4 @@
         <item>"9,1"</item>
     </string-array>
 
-    <!-- Component name of the default wallpaper. This will be ImageWallpaper if not
-         specified -->
-    <string name="default_wallpaper_component">com.android.wallpaper/.fall.FallWallpaper</string>
 </resources>

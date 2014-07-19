@@ -79,9 +79,6 @@ PRODUCT_PACKAGES += \
 	lights.beagleboneblack
 
 PRODUCT_PACKAGES += \
-	FileManager-1.1.6
-
-PRODUCT_PACKAGES += \
 	androidvncserver
 
 PRODUCT_PACKAGES += \

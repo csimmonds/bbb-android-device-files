@@ -12,27 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#
-# This file is the build configuration for a full Android
-# build for toro hardware. This cleanly combines a set of
-# device-specific aspects (drivers) with a device-agnostic
-# product configuration (apps). Except for a few implementation
-# details, it only fundamentally contains two inherit-product
-# lines, full and toro, hence its name.
-#
-
-# Live Wallpapers
-PRODUCT_PACKAGES += \
-        LiveWallpapers \
-        LiveWallpapersPicker \
-        MagicSmokeWallpapers \
-        VisualizationWallpapers \
-        librs_jni
-
-PRODUCT_PROPERTY_OVERRIDES := \
-        net.dns1=8.8.8.8 \
-        net.dns2=8.8.4.4
-
 # Inherit from those products. Most specific first.
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base.mk)
 $(call inherit-product, device/ti/beagleboneblack/device.mk)
@@ -40,5 +19,5 @@ $(call inherit-product, device/ti/beagleboneblack/device.mk)
 PRODUCT_NAME := beagleboneblack
 PRODUCT_DEVICE := beagleboneblack
 PRODUCT_BRAND := Android
-PRODUCT_MODEL := BEAGLEBONEBLACK
-PRODUCT_MANUFACTURER := Texas_Instruments_Inc
+PRODUCT_MODEL :=  BeagleBone Black
+PRODUCT_MANUFACTURER := TI
