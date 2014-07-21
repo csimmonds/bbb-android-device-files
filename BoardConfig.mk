@@ -28,21 +28,21 @@ TARGET_CPU_VARIANT := generic
 BOARD_HAVE_BLUETOOTH := false
 TARGET_NO_BOOTLOADER := true
 TARGET_NO_RECOVERY := true
-
-BOARD_KERNEL_BASE := 0x80008000
-BOARD_KERNEL_CMDLINE := console=ttyO0,115200n8 androidboot.console=ttyO0 rootwait ro
+TARGET_NO_KERNEL := true
 
 TARGET_NO_RADIOIMAGE := true
 TARGET_BOARD_PLATFORM := omap3
 TARGET_BOOTLOADER_BOARD_NAME := beagleboneblack
 BOARD_USB_CAMERA := true
-#BOARD_USES_HGL := true
-#BOARD_USES_OVERLAY := true
 USE_OPENGL_RENDERER := true
 
+# Partition sizes suitable for uSD cards >= 4GiB
+# system and cache are kept small, 256 miB
+# userdata is 3 GiB, taking up most of the remaining space but leaving
+# a bit of free space to cater for different sized "4GiB" cards
 TARGET_USERIMAGES_USE_EXT4 := true
 BOARD_SYSTEMIMAGE_PARTITION_SIZE := 268435456
-BOARD_USERDATAIMAGE_PARTITION_SIZE := 268435456
+BOARD_USERDATAIMAGE_PARTITION_SIZE := 3221225472
 BOARD_CACHEIMAGE_PARTITION_SIZE := 268435456
 BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := ext4
 BOARD_FLASH_BLOCK_SIZE := 4096

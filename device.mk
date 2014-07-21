@@ -13,14 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-ifeq ($(TARGET_PREBUILT_KERNEL),)
-LOCAL_KERNEL := device/ti/beagleboneblack/kernel
-else
-LOCAL_KERNEL := $(TARGET_PREBUILT_KERNEL)
-endif
 
 PRODUCT_COPY_FILES := \
-	$(LOCAL_KERNEL):kernel \
 	device/ti/beagleboneblack/init.am335xevm.rc:root/init.am335xevm.rc \
 	device/ti/beagleboneblack/init.am335xevm.usb.rc:root/init.am335xevm.usb.rc \
 	device/ti/beagleboneblack/vold.fstab:system/etc/vold.fstab \
