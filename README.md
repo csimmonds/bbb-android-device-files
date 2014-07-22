@@ -1,4 +1,4 @@
-# How to build Andorid KitKat 4.4 for BeagleBone Black
+# How to build Android KitKat 4.4 for BeagleBone Black
 
 These instructions use `AOSP 4.4.4_r1` from Google and bootloader, kernel
 and graphics drivers from TI Rowboat (http://arowboat.org). They were tested
@@ -16,6 +16,7 @@ There are two install options
 Option (1) is probably the easier, so if in doubt I advise you to start there.
 
 Overall, the steps are
+
 1. Get AOSP source from Google 
 2. Get my device files for the BeagleBone Black 
 3. Get the Rowboat kernel 
@@ -62,12 +63,12 @@ $ cd ~/aosp/device/ti
 $ git clone https://github.com/csimmonds/bbb-android-device-files.git beagleboneblack
 ```
 
-Checkout the right version. If *installing to an SD card*:
+Checkout the right version. If **installing to an SD card**:
 ```
 $ git checkout kk4.4-sdcard
 ```
 
-If *installing to eMMC via fastboot*:
+If **installing to eMMC via fastboot**:
 ```
 $ git checkout kk4.4-fastboot
 ```
@@ -98,7 +99,7 @@ $ make ARCH=arm CROSS_COMPILE=arm-eabi- am335x_evm_android_defconfig
 $ make ARCH=arm CROSS_COMPILE=arm-eabi- -j4 uImage
 $ croot
 ```
-If *installing to eMMC via fastboot* you need to include the kernel binary in
+If **installing to eMMC via fastboot** you need to include the kernel binary in
 the build:
 ```
 $ cp kernel/arch/arm/boot/zImage device/ti/beagleboneblack/kernel
@@ -116,8 +117,8 @@ This takes an hour or two. When complete you will find the compiled Android
 system in `~/aosp/out/target/product/beagleboneblack/`
 
 #Get and build U-Boot
-If *installing to eMMC via fastboot* build and install as described in this
-tutorial (http://2net.co.uk/tutorial/fastboot-beaglebone
+If **installing to eMMC via fastboot** build and install as described in this
+tutorial http://2net.co.uk/tutorial/fastboot-beaglebone
 
 Otherwise, if installing to an SD card use the U-Boot from Rowboat.
 Get and build it like so:
@@ -198,13 +199,13 @@ You need a micro SD card of at least 4 GiB capacity. Insert your SD card into
 your SD card reader. It will appear as either `/dev/sd?` Or as `/dev/mmcblk?`
 Use fdisk or similar to create partitions like this:
 ```
-Partition    type    bootable?   Size (MB)  ID and file system
+Partition    type    bootable?   Size (MiB) ID and file system
 1          primary      *               64   c  W95 FAT32 (LBA) 
 2          primary                      32  83  Linux 
 3          primary                      32  83  Linux
-4          extended                1718955
+4          extended                   ----  (remainder of device)
 5          logical                     270  83  Linux 
-6          logical                     270  83  Linux 
+6          logical                    3080  83  Linux 
 7          logical                     270  83  Linux 
 ```
 I am going to leave the details up to you: that way you can't blame me if it
@@ -246,6 +247,7 @@ faster, I find it to be about 30 seconds.
 
 #Install option (2): install to eMMC via fastboot
 Assuming you have your BeagleBone Black with u-boot/fastboot installed:
+
 1. Plug in the serial-to-USB cable from the BeagleBone to the PC 
 2. Start your terminal emulator (e.g if using gtkterm: `gtkterm -p /dev/ttyUSB0 -s 115200`) 
 3. Apply 5V power to the BeagleBone 
