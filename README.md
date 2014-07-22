@@ -10,6 +10,7 @@ command-line tools, including make.
 
 There are two install options
 1. Create a bootable micro SD card and boot the BeagleBone from that
+
 2. Install a version of u-boot with fastboot support in the internal eMMC
    and use the fastboot command to flash the Android image files
 
@@ -17,13 +18,13 @@ Option (1) is probably the easier, so if in doubt I advise you to start there.
 
 Overall, the steps are
 
-1. Get AOSP source from Google 
-2. Get my device files for the BeagleBone Black 
-3. Get the Rowboat kernel 
-4. Get the Rowboat SGX 530 GPU drivers 
-5. Get the Rowboat U-Boot 
-6. Build everything
-7. Either put it on a micro SD card or flash using fastboot
+1. Get AOSP source from Google  
+2. Get my device files for the BeagleBone Black  
+3. Get the Rowboat kernel  
+4. Get the Rowboat SGX 530 GPU drivers  
+5. Get the Rowboat U-Boot  
+6. Build everything  
+7. Either put it on a micro SD card or flash using fastboot  
 
 Make sure that you have a system capable to building AOSP in a reasonable
 amount of time as described here
@@ -248,11 +249,11 @@ faster, I find it to be about 30 seconds.
 #Install option (2): install to eMMC via fastboot
 Assuming you have your BeagleBone Black with u-boot/fastboot installed:
 
-1. Plug in the serial-to-USB cable from the BeagleBone to the PC 
-2. Start your terminal emulator (e.g if using gtkterm: `gtkterm -p /dev/ttyUSB0 -s 115200`) 
-3. Apply 5V power to the BeagleBone 
+1. Plug in the serial-to-USB cable from the BeagleBone to the PC
+2. Start your terminal emulator (e.g if using gtkterm: `gtkterm -p /dev/ttyUSB0 -s 115200`)
+3. Apply 5V power to the BeagleBone
 4. At the “U-Boot#” prompt, type "fastboot"
-5. Plug in the USB cable between the mini USB port on the BeagleBone and the PC 
+5. Plug in the USB cable between the mini USB port on the BeagleBone and the PC
 
 Now you can use fastboot to flash the Android images:
 ```
