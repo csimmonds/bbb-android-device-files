@@ -1,0 +1,46 @@
+From b383394f4c07420a1f932d104dcacc04b0d5a2d9 Mon Sep 17 00:00:00 2001
+From: Chris Simmonds <chris@2net.co.uk>
+Date: Tue, 22 Jul 2014 08:18:04 +0100
+Subject: [PATCH] Fix CallStack API to make it backwards compatibe with JB 4.3
+ binaries, such as gralloc.omap3.so
+
+---
+ include/utils/CallStack.h | 5 ++++-
+ libutils/CallStack.cpp    | 5 +++++
+ 2 files changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/include/utils/CallStack.h b/include/utils/CallStack.h
+index 2056751..223a085 100644
+--- a/include/utils/CallStack.h
++++ b/include/utils/CallStack.h
+@@ -66,7 +66,10 @@ public:
+     void clear();
+ 
+     // Immediately collect the stack traces for the specified thread.
+-    void update(int32_t ignoreDepth=1, int32_t maxDepth=MAX_DEPTH, pid_t tid=CURRENT_THREAD);
++    void update(int32_t ignoreDepth, int32_t maxDepth, pid_t tid);
++
++    // CDS: for compatabilty with JB 4.3, needed for gralloc.omap3.so
++    void update(int32_t ignoreDepth=1, int32_t maxDepth=MAX_DEPTH);
+ 
+     // Dump a stack trace to the log using the supplied logtag.
+     void log(const char* logtag,
+diff --git a/libutils/CallStack.cpp b/libutils/CallStack.cpp
+index 4ceaa7c..4dfff77 100644
+--- a/libutils/CallStack.cpp
++++ b/libutils/CallStack.cpp
+@@ -109,6 +109,11 @@ void CallStack::update(int32_t ignoreDepth, int32_t maxDepth, pid_t tid) {
+     mCount = count > 0 ? count : 0;
+ }
+ 
++// CDS: for compatabilty with JB 4.3, needed for gralloc.omap3.so
++void CallStack::update(int32_t ignoreDepth, int32_t maxDepth) {
++    update(ignoreDepth, maxDepth, CURRENT_THREAD);
++}
++
+ void CallStack::log(const char* logtag, android_LogPriority priority, const char* prefix) const {
+     LogPrinter printer(logtag, priority, prefix, /*ignoreBlankLines*/false);
+     print(printer);
+-- 
+1.9.2
+
