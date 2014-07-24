@@ -34,6 +34,7 @@ Then follow these steps to set it up
 For reference, I tested on two machines: one a laptop with dual core i7 and
 4 GiB RAM running Ubuntu 12.04 64 bit (AOSP build takes more than 2 hours),
 and the other an octo core AMD FX-8150 with 16 GiB RAM (takes 35 minutes).
+
 You will need in addition the U-Boot mkimage tool. On Ubuntu 12.04 run
 `sudo apt-get install u-boot-tools`
 
@@ -52,15 +53,18 @@ $ cd aosp
 $ repo init -u https://android.googlesource.com/platform/manifest -b android-4.4.4_r1
 $ repo sync -c
 ```
-This takes several hours because there is 12 GiB to download. When complete
+This takes several hours because there is > 20 GiB to download. When complete
 you will have the AOSP code in `~/aosp`
 
 
 # Get device files for BeagleBone Black
 Get my device files for the BeagleBone Black into device/ti/beagleboneblack
 ```
-$ cd ~/aosp/device/ti
+$ cd ~/aosp/device
+$ mkdir ti
+$ cd ti
 $ git clone https://github.com/csimmonds/bbb-android-device-files.git beagleboneblack
+$ cd beagleboneblack
 ```
 
 Checkout the right version. If **installing to an SD card**:
@@ -74,8 +78,7 @@ $ git checkout kk4.4-fastboot
 ```
 Apply the patch.... 
 ```
-$ croot
-$ cd system/core
+$ cd ~/aosp/system/core
 $ patch -p1 < ../../device/ti/beagleboneblack/0001-Fix-CallStack-API.patch
 ```
 Then select the product:
@@ -110,7 +113,7 @@ Now you are ready to run the first AOSP build. Note: the -j option to "make"
 determines the number of parallel jobs to run. My rule of thumb is to use the
 number of CPU cores plus 2
 ```
-$ cd ~/aosp
+$ croot
 $ make -j10
 ```
 This takes an hour or two. When complete you will find the compiled Android
@@ -170,8 +173,8 @@ Note: W=1 is needed to avoid turning warnings into errors...
 ```
 $ cd ~/aosp/hardware/ti/sgx
 $ PATH=$HOME/aosp/prebuilts/gcc/linux-x86/arm/arm-eabi-4.6/bin:$PATH
-$ make TARGET_PRODUCT=beagleboneblack OMAPES=4.x ANDROID_ROOT_DIR=$HOME/aosp-4.3_r2.1 W=1
-$ make TARGET_PRODUCT=beagleboneblack OMAPES=4.x ANDROID_ROOT_DIR=$HOME/aosp-4.3_r2.1 W=1 install 
+$ make TARGET_PRODUCT=beagleboneblack OMAPES=4.x ANDROID_ROOT_DIR=$HOME/aosp W=1
+$ make TARGET_PRODUCT=beagleboneblack OMAPES=4.x ANDROID_ROOT_DIR=$HOME/aosp W=1 install 
 ```
 That will result in populating `device/ti/beagleboneblack/sgx`
 
