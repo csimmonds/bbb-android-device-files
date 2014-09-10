@@ -92,12 +92,14 @@ Select "beagleboneblack-eng" (option 10)
 
 #Get and build the kernel
 The kernel comes from the Rowboat project. It is version 3.2, without device
-tree support, but it works well enough for this project.
+tree support, but with a small patch to allow "adb reboot bootloader"
+to work.
 ```
 $ cd ~/aosp
 $ git clone git://gitorious.org/rowboat/kernel.git
 $ cd kernel
 $ git checkout rowboat-am335x-kernel-3.2
+$ patch -p1 < ../device/ti/beagleboneblack/kernel-patches/0001-Reboot-reason-flags-for-BBB.patch
 $ make ARCH=arm CROSS_COMPILE=arm-eabi- am335x_evm_android_defconfig
 $ make ARCH=arm CROSS_COMPILE=arm-eabi- -j4 uImage
 $ croot
