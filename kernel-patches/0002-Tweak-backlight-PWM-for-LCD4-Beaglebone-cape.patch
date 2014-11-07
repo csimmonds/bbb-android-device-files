@@ -1,0 +1,25 @@
+From a7a7bc8bc808de1c0261c91bdcd211ccfdfcd393 Mon Sep 17 00:00:00 2001
+From: Chris Simmonds <chris@2net.co.uk>
+Date: Mon, 2 Jun 2014 08:22:00 +0100
+Subject: [PATCH 2/2] Tweak backlight PWM for LCD4 Beaglebone cape
+
+---
+ arch/arm/mach-omap2/board-am335xevm.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/mach-omap2/board-am335xevm.c b/arch/arm/mach-omap2/board-am335xevm.c
+index 8c0cb29..379351b 100644
+--- a/arch/arm/mach-omap2/board-am335xevm.c
++++ b/arch/arm/mach-omap2/board-am335xevm.c
+@@ -151,7 +151,7 @@ static struct platform_pwm_backlight_data lcd7_bl_pdata = {
+ 	.ch             = 0,
+ 	.max_brightness = AM335X_BACKLIGHT_MAX_BRIGHTNESS,
+ 	.dft_brightness = AM335X_BACKLIGHT_DEFAULT_BRIGHTNESS,
+-	.pwm_period_ns  = AM335X_PWM_PERIOD_NANO_SECONDS,
++	.pwm_period_ns  = AM335X_PWM_PERIOD_NANO_SECONDS * 100,
+ };
+ 
+ static struct lcd_ctrl_config lcd_cfg = {
+-- 
+1.7.9.5
+
