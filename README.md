@@ -95,7 +95,7 @@ The kernel comes from the Rowboat project. It is version 3.2, without device
 tree support, but it works well enough for this project.
 ```
 $ cd ~/aosp
-$ git clone git://gitorious.org/rowboat/kernel.git
+$ git clone https://gitorious.org/rowboat/kernel.git
 $ cd kernel
 $ git checkout rowboat-am335x-kernel-3.2
 $ make ARCH=arm CROSS_COMPILE=arm-eabi- am335x_evm_android_defconfig
@@ -127,7 +127,7 @@ Otherwise, if installing to an SD card use the U-Boot from Rowboat.
 Get and build it like so:
 ```
 $ cd ~/aosp
-$ git clone git://gitorious.org/rowboat/u-boot
+$ git clone https://gitorious.org/rowboat/u-boot
 $ cd u-boot
 $ git checkout am335x-v2013.01.01
 $ make CROSS_COMPILE=arm-eabi- distclean
@@ -145,7 +145,7 @@ has some paths hard coded which is why it has to be put into `hardware/ti/sgx`,
 and also why the kernel has to be in `directory kernel/`.
 ```
 $ cd ~/aosp/hardware/ti
-$ git clone git://git.gitorious.org/rowboat/hardware-ti-sgx.git sgx
+$ git clone https://git.gitorious.org/rowboat/hardware-ti-sgx.git sgx
 $ cd sgx
 $ git checkout ti_sgx_sdk-ddk_1.10-jb-4.3
 ```
@@ -183,7 +183,7 @@ The droid VNC server is useful if you want to test Android on your
 BeagleBone but don't have a screen:
 ```
 $ cd  ~/aosp/external
-$ git clone git://gitorious.org/rowboat/droid-vnc-server
+$ git clone https://gitorious.org/rowboat/droid-vnc-server
 ```
 
 #Final build
