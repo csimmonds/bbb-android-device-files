@@ -25,6 +25,11 @@ PRODUCT_COPY_FILES := \
 	device/ti/beagleboneblack/mixer_paths.xml:system/etc/mixer_paths.xml \
 	device/ti/beagleboneblack/audio_policy.conf:system/etc/audio_policy.conf
 
+# These are the hardware-specific features
+PRODUCT_COPY_FILES += \
+    frameworks/native/data/etc/android.hardware.usb.accessory.xml:system/etc/permissions/android.hardware.usb.accessory.xml \
+    frameworks/native/data/etc/android.hardware.usb.host.xml:system/etc/permissions/android.hardware.usb.host.xml \
+
 # KeyPads
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/gpio-keys.kl:system/usr/keylayout/gpio-keys.kl \
