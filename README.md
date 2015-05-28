@@ -1,6 +1,16 @@
-# How to build Android KitKat 4.4 for BeagleBone Black
+# How to build Android Lollipop 5.x for BeagleBone Black
 
-These instructions use `AOSP 4.4.4_r1` from Google and bootloader, kernel
+This is a "work in progress", don't expect everything to go smoothly.
+
+This build has been tested on a BBB rev A (2 GiB internal eMMC) with an
+LCD4 cape. Here are some issues that I am aware of
+
+1. The boot time is long, expect to wait several minutes
+2. The graphics are not accelerated and the screen flickers when updating
+3. The buttons on the screen do not work
+4. The Ethernet interface is not configured
+
+These instructions use `AOSP 5.1.0_r5` from Google and bootloader, kernel
 and graphics drivers from TI Rowboat (http://arowboat.org). They were tested
 using Ubuntu 12.04 on the build machine and a BeagelBone Black A6 as the target.
 
@@ -32,13 +42,13 @@ Then follow these steps to set it up
 (http://source.android.com/source/initializing.html)
 
 For reference, I tested on two machines: one a laptop with dual core i7 and
-4 GiB RAM running Ubuntu 12.04 64 bit (AOSP build takes more than 2 hours),
-and the other an octo core AMD FX-8150 with 16 GiB RAM (takes 35 minutes).
+4 GiB RAM running Ubuntu 12.04 64 bit (AOSP build takes more than 3 hours),
+and the other an octo core AMD FX-8150 with 16 GiB RAM (takes 1 hour).
 
 You will need in addition the U-Boot mkimage tool. On Ubuntu 12.04 run
 `sudo apt-get install u-boot-tools`
 
-# Get AOSP version 4.4.4_r1
+# Get AOSP version 5.1.0_r5
 Note: in the following I am installing and building everything in directory
 `~/aosp`. You may use whichever directory you wish but you will have to modify
 the paths used below accordingly.
@@ -50,7 +60,7 @@ $ curl http://commondatastorage.googleapis.com/git-repo-downloads/repo > ~/bin/r
 $ chmod a+x ~/bin/repo
 $ mkdir ~/aosp
 $ cd aosp
-$ repo init -u https://android.googlesource.com/platform/manifest -b android-4.4.4_r1
+$ repo init -u https://android.googlesource.com/platform/manifest -b android-5.1.0_r5
 $ repo sync -c
 ```
 This takes several hours because there is > 20 GiB to download. When complete
@@ -67,28 +77,18 @@ $ git clone https://github.com/csimmonds/bbb-android-device-files.git beaglebone
 $ cd beagleboneblack
 ```
 
-Checkout the right version. If **installing to an SD card**:
+Checkout the current version:
 ```
-$ git checkout kk4.4-sdcard
+$ git checkout lollipop-5.1
 ```
 
-If **installing to eMMC via fastboot**:
-```
-$ git checkout kk4.4-fastboot
-```
-Apply the patch.... 
-```
-$ cd ~/aosp/system/core
-$ patch -p1 < ../../device/ti/beagleboneblack/0001-Fix-CallStack-API.patch
-```
-Then select the product:
 ```
 $ cd ~/aosp
 $ . build/envsetup.sh
 $ lunch
 ```
 
-Select "beagleboneblack-eng" (option 10)
+Select "beagleboneblack-eng"
 
 #Get and build the kernel
 The kernel comes from the Rowboat project. It is version 3.2, without device
@@ -100,7 +100,9 @@ $ git clone https://gitorious.org/rowboat/kernel.git
 $ cd kernel
 $ git checkout rowboat-am335x-kernel-3.2
 $ patch -p1 < ../device/ti/beagleboneblack/kernel-patches/0001-Reboot-reason-flags-for-BBB.patch
-$ make ARCH=arm CROSS_COMPILE=arm-eabi- am335x_evm_android_defconfig
+$ patch -p1 < ../device/ti/beagleboneblack/kernel-patches/0002-Tweak-backlight-PWM-for-LCD4-Beaglebone-cape.patch
+$ cp ../device/ti/beagleboneblack/kernel-patches/bbb_android_defconfig .config
+$ make ARCH=arm oldconfig
 $ make ARCH=arm CROSS_COMPILE=arm-eabi- -j4 uImage
 $ croot
 ```
@@ -140,62 +142,6 @@ $ make CROSS_COMPILE=arm-eabi-
 This will create the first stage boot loader, MLO, and the second stage
 bootloader, u-boot.bin.
 
-#Get the SGX drivers
-Once again I am getting these from Rowboat. This is messy because they are
-not very well integrated with the AOSP code. One issue is that the makefile
-has some paths hard coded which is why it has to be put into `hardware/ti/sgx`, 
-and also why the kernel has to be in `directory kernel/`.
-```
-$ cd ~/aosp/hardware/ti
-$ git clone https://git.gitorious.org/rowboat/hardware-ti-sgx.git sgx
-$ cd sgx
-$ git checkout ti_sgx_sdk-ddk_1.10-jb-4.3
-```
-
-With Rowboat, the binaries are copied into
-`out/target/product/beagleboneblack/system` after the AOSP build is complete
-and then post-processed into the install tar ball. I want to have them built
-as part of the AOSP build, so I edit one of the makefiles to put the binaries
-into my device directory. Then they get sucked into the final images by the
-rules in my `device.mk`. So, edit `Rules.make`: line 23 and change
-```
-TARGETFS_INSTALL_DIR=$(ANDROID_ROOT_DIR)/out/target/product/$(TARGET_PRODUCT)/
-```
-to
-```
-TARGETFS_INSTALL_DIR=$(ANDROID_ROOT_DIR)/device/ti/beagleboneblack/sgx
-```
-
-#Build SGX
-This next bit has to be run in a completely new shell. I'm sorry, but for
-some reason it won't build in a shell that has been set up for an AOSP build
-(i.e. has ". build/emvsetup.sh").
-
-Note: W=1 is needed to avoid turning warnings into errors...
-```
-$ cd ~/aosp/hardware/ti/sgx
-$ PATH=$HOME/aosp/prebuilts/gcc/linux-x86/arm/arm-eabi-4.6/bin:$PATH
-$ make TARGET_PRODUCT=beagleboneblack OMAPES=4.x ANDROID_ROOT_DIR=$HOME/aosp W=1
-$ make TARGET_PRODUCT=beagleboneblack OMAPES=4.x ANDROID_ROOT_DIR=$HOME/aosp W=1 install 
-```
-That will result in populating `device/ti/beagleboneblack/sgx`
-
-#Optional – get Android VNC server
-The droid VNC server is useful if you want to test Android on your
-BeagleBone but don't have a screen:
-```
-$ cd  ~/aosp/external
-$ git clone https://gitorious.org/rowboat/droid-vnc-server
-```
-
-#Final build
-Now you need to regenerate the Android image files to include the sgx binaries. This should only take a few minutes.
-```
-$ cd ~/aosp
-$ . build/envsetup.sh
-$ lunch beagleboneblack-eng
-$ make installclean
-$ make -j10
 ```
 If something goes wrong, go back through the steps and try to identify the problem.
 
@@ -247,8 +193,8 @@ $ sudo dd if=cache.img of=/dev/mmcblk0p7 bs=4M
 Now put the SD card in your BeagleBone. Hold down the boot button while
 powering on to get it to load U-Boot from the SD card. All being well,
 you should see the "Android" boot animation after about 30 seconds and the
-launcher screen after 90 to 120 seconds. The second time the boot should be
-faster, I find it to be about 30 seconds.
+launcher screen after 2 or 3 minutes. The second time the boot should be
+faster, I find it to be about 60 seconds.
 
 #Install option (2): install to eMMC via fastboot
 Assuming you have your BeagleBone Black with u-boot/fastboot installed:

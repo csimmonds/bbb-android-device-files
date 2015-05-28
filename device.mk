@@ -28,15 +28,20 @@ PRODUCT_COPY_FILES := \
 # These are the hardware-specific features
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.usb.accessory.xml:system/etc/permissions/android.hardware.usb.accessory.xml \
-    frameworks/native/data/etc/android.hardware.usb.host.xml:system/etc/permissions/android.hardware.usb.host.xml \
+    frameworks/native/data/etc/android.hardware.usb.host.xml:system/etc/permissions/android.hardware.usb.host.xml
+
+# Need AppWidget permission to prevent Launcher[2|3] crashing
+PRODUCT_COPY_FILES += \
+    frameworks/native/data/etc/android.software.app_widgets.xml:system/etc/permissions/android.software.app_widgets.xml
 
 # KeyPads
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/gpio-keys.kl:system/usr/keylayout/gpio-keys.kl \
     $(LOCAL_PATH)/ti-tsc.idc:system/usr/idc/ti-tsc.idc
 
+# BeagleBone Black only has 512 MiB RAM
 PRODUCT_PROPERTY_OVERRIDES := \
-       hwui.render_dirty_regions=false
+      ro.config.low_ram=true
 
 # Explicitly specify dpi, otherwise the icons don't show up correctly with SGX enabled
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -83,10 +88,14 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
 	camera.omap3
 
+# Use pixel flinger (libGLES_android.so) as a backup to SGX
+PRODUCT_PACKAGES += \
+	libGLES_android
+
 # Include SGX if they exist: they won't on the first build
 ifneq ($(wildcard device/ti/beagleboneblack/sgx/system),)
     $(call inherit-product, device/ti/beagleboneblack/device-sgx.mk)
 endif
 
-# Provides overrides to configure the Dalvik heap for a standard tablet device
-$(call inherit-product, frameworks/native/build/tablet-dalvik-heap.mk)
+# Configure the Dalvik heap for a device with 512 MiB RAM
+$(call inherit-product, frameworks/native/build/phone-hdpi-512-dalvik-heap.mk)

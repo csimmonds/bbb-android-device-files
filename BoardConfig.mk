@@ -36,13 +36,15 @@ TARGET_BOOTLOADER_BOARD_NAME := beagleboneblack
 BOARD_USB_CAMERA := true
 USE_OPENGL_RENDERER := true
 
+WITH_DEXPREOPT := true
+
 # Partition sizes suitable for uSD cards >= 4GiB
-# system and cache are kept small, 256 miB
+# system and cache are kept small, 512 miB
 # userdata is 3 GiB, taking up most of the remaining space but leaving
 # a bit of free space to cater for different sized "4GiB" cards
 TARGET_USERIMAGES_USE_EXT4 := true
-BOARD_SYSTEMIMAGE_PARTITION_SIZE := 268435456
-BOARD_USERDATAIMAGE_PARTITION_SIZE := 3221225472
+BOARD_SYSTEMIMAGE_PARTITION_SIZE := 536870912
+BOARD_USERDATAIMAGE_PARTITION_SIZE := 536870912
 BOARD_CACHEIMAGE_PARTITION_SIZE := 268435456
 BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := ext4
 BOARD_FLASH_BLOCK_SIZE := 4096
