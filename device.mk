@@ -15,15 +15,23 @@
 #
 
 PRODUCT_COPY_FILES := \
+	device/ti/beagleboneblack/kernel:kernel \
 	device/ti/beagleboneblack/init.am335xevm.rc:root/init.am335xevm.rc \
 	device/ti/beagleboneblack/init.am335xevm.usb.rc:root/init.am335xevm.usb.rc \
 	device/ti/beagleboneblack/vold.fstab:system/etc/vold.fstab \
-	device/ti/beagleboneblack/fstab.am335xevm:root/fstab.am335xevm \
 	device/ti/beagleboneblack/ueventd.am335xevm.rc:root/ueventd.am335xevm.rc \
 	device/ti/beagleboneblack/media_codecs.xml:system/etc/media_codecs.xml \
 	device/ti/beagleboneblack/media_profiles.xml:system/etc/media_profiles.xml \
 	device/ti/beagleboneblack/mixer_paths.xml:system/etc/mixer_paths.xml \
 	device/ti/beagleboneblack/audio_policy.conf:system/etc/audio_policy.conf
+
+ifneq ($(filter beagleboneblack_sd, $(TARGET_PRODUCT)),)
+PRODUCT_COPY_FILES += \
+	device/ti/beagleboneblack/fstab.am335xevm-sd:root/fstab.am335xevm
+else
+PRODUCT_COPY_FILES += \
+	device/ti/beagleboneblack/fstab.am335xevm:root/fstab.am335xevm
+endif
 
 # These are the hardware-specific features
 PRODUCT_COPY_FILES += \

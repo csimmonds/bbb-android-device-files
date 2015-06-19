@@ -46,7 +46,7 @@ done
 
 # Select device to flash
 echo "Available devices:"
-find /dev -name "sd?" -o -name "mmcblk?"
+lsblk -d
 echo "Select device to flash (e.g. sdb, mmcblk0, ...):"
 read device
 if [ -z $device ]; then
@@ -92,7 +92,7 @@ done
 echo "Partitioning $device"
 sudo dd if=/dev/zero of=/dev/$device bs=512 count=1
 sync
-# sudo sfdisk -D -H 255 -S 63 /dev/${device} << EOF
+sleep 4
 sudo sfdisk -D -u M /dev/${device} << EOF
 0,32,0x0C,*
 ,512,,,
@@ -105,7 +105,8 @@ if [ $? != 0 ]; then echo "ERROR"; exit; fi
 sleep 4
 
 echo "Formatting $BOOT_PART"
-sudo mkfs.vfat -F 32 -s 2 -n boot $BOOT_PART
+# sudo mkfs.vfat -F 32 -s 2 -n boot $BOOT_PART
+sudo mkfs.vfat -F 32 -n boot $BOOT_PART
 if [ $? != 0 ]; then echo "ERROR"; exit; fi
 
 echo "Mounting $BOOT_PART"
@@ -124,15 +125,15 @@ copy_or_fail uRamdisk /mnt/uRamdisk
 echo "Copying system image"
 sudo dd if=out/target/product/beagleboneblack/system.img of=$SYSTEM_PART bs=1M
 if [ $? != 0 ]; then echo "ERROR"; exit; fi
-e2label $SYSTEM_PART system
+sudo e2label $SYSTEM_PART system
 echo "Copying userdata image"
 sudo dd if=out/target/product/beagleboneblack/userdata.img of=$USER_PART bs=1M
 if [ $? != 0 ]; then echo "ERROR"; exit; fi
-e2label $USER_PART userdata
+sudo e2label $USER_PART userdata
 echo "Copying cache image"
 sudo dd if=out/target/product/beagleboneblack/cache.img of=$CACHE_PART bs=1M
 if [ $? != 0 ]; then echo "ERROR"; exit; fi
-e2label $CACHE_PART cache
+sudo e2label $CACHE_PART cache
 
 sudo umount $BOOT_PART
 

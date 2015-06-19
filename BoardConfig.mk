@@ -27,8 +27,6 @@ TARGET_CPU_VARIANT := generic
 
 BOARD_HAVE_BLUETOOTH := false
 TARGET_NO_BOOTLOADER := true
-TARGET_NO_RECOVERY := true
-TARGET_NO_KERNEL := true
 
 TARGET_NO_RADIOIMAGE := true
 TARGET_BOARD_PLATFORM := omap3
@@ -37,6 +35,12 @@ BOARD_USB_CAMERA := true
 USE_OPENGL_RENDERER := true
 
 WITH_DEXPREOPT := true
+
+ifneq ($(filter beagleboneblack_sd, $(TARGET_PRODUCT)),)
+# Build version to boot off uSD card
+
+TARGET_NO_RECOVERY := true
+TARGET_NO_KERNEL := true
 
 # Partition sizes suitable for uSD cards >= 4GiB
 # system and cache are kept small, 512 miB
@@ -51,3 +55,17 @@ BOARD_FLASH_BLOCK_SIZE := 4096
 
 TARGET_USERIMAGES_SPARSE_EXT_DISABLED := true
 
+else
+# Build version for installation into internal eMMC
+BOARD_KERNEL_BASE := 0x80008000
+BOARD_KERNEL_CMDLINE := console=ttyO0,115200n8 androidboot.console=ttyO0 rootwait ro qemu=1 qemu.gles=0
+
+# Partition sizes for BBB with 2 GiB eMMC (rev A and B)
+TARGET_USERIMAGES_USE_EXT4 := true
+BOARD_SYSTEMIMAGE_PARTITION_SIZE   :=  536870912
+BOARD_USERDATAIMAGE_PARTITION_SIZE := 1097859072
+BOARD_CACHEIMAGE_PARTITION_SIZE    :=  268435456
+BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := ext4
+BOARD_FLASH_BLOCK_SIZE := 4096
+
+endif

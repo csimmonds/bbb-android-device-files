@@ -1,16 +1,15 @@
-# How to build Android Lollipop 5.x for BeagleBone Black
+# How to build Android Lollipop 5.1 for BeagleBone Black
 
 This is a "work in progress", don't expect everything to go smoothly.
 
 This build has been tested on a BBB rev A (2 GiB internal eMMC) with an
 LCD4 cape. Here are some issues that I am aware of:
 
-1. It has to be installed on uSD card; booting from internal eMMC does not work
-2. The initial boot time is long, expect to wait several minutes
-3. The graphics are not accelerated and the screen flickers whenever it is updated
-4. The buttons on the LCD4 cape do not work
-5. The Ethernet interface is not configured
-6. The Linux 3.2 kernel is unreliable if built with the gcc 4.8 toolchain that comes with AOSP 5.x
+1. The initial boot time is long, expect to wait several minutes
+2. The graphics are not accelerated and the screen flickers whenever it is updated
+3. The buttons on the LCD4 cape do not work
+4. The Ethernet interface is not configured
+5. The Linux 3.2 kernel is unreliable if built with the gcc 4.8 toolchain that comes with AOSP 5.x
 
 These instructions use `AOSP 5.1.0_r5` from Google and bootloader, kernel
 and graphics drivers from TI Rowboat (https://gitorious.org/rowboat). They
@@ -90,7 +89,8 @@ $ . build/envsetup.sh
 $ lunch
 ```
 
-Select "beagleboneblack-eng"
+Select "beagleboneblack_sd-eng" if you are installing to uSD card or
+"beagleboneblack-eng" if you are instaling to internal flash.
 
 #Get and build the kernel
 NOTE: do not use the gcc 4.8 toolchain that is in prebuilts/gcc/linux-x86/arm/arm-eabi-4.8.
@@ -132,8 +132,7 @@ system in `~/aosp/out/target/product/beagleboneblack/`
 If **installing to eMMC via fastboot** build and install as described in this
 tutorial http://2net.co.uk/tutorial/fastboot-beaglebone
 
-Otherwise, if installing to an SD card use the U-Boot from Rowboat.
-Get and build it like so:
+Otherwise, if installing to an SD card get and build U-Boot like so:
 ```
 $ cd ~/aosp
 $ git clone https://github.com/csimmonds/u-boot
@@ -182,7 +181,4 @@ $ fastboot flashall
 ```
 The last command flashes boot.img, recovery.img and sytem.img and then
 reboots the device.
-
-Reboot the BeagleBone and you should boot into Android.
-
 
