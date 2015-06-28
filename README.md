@@ -7,9 +7,8 @@ LCD4 cape. Here are some issues that I am aware of:
 
 1. The initial boot time is long, expect to wait several minutes
 2. The graphics are not accelerated and the screen flickers whenever it is updated
-3. The buttons on the LCD4 cape do not work
-4. The Ethernet interface is not configured
-5. The Linux 3.2 kernel is unreliable if built with the gcc 4.8 toolchain that comes with AOSP 5.x
+3. The Ethernet interface is not configured
+4. The Linux 3.2 kernel is unreliable if built with the gcc 4.8 toolchain that comes with AOSP 5.x
 
 These instructions use `AOSP 5.1.0_r5` from Google and bootloader, kernel
 and graphics drivers from TI Rowboat (https://gitorious.org/rowboat). They
