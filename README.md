@@ -96,7 +96,7 @@ tree support, but with a small patch to allow "adb reboot bootloader"
 to work.
 ```
 $ cd ~/aosp
-$ git clone git://gitorious.org/rowboat/kernel.git
+$ git clone https://github.com/csimmonds/rowboat-kernel.git
 $ cd kernel
 $ git checkout rowboat-am335x-kernel-3.2
 $ patch -p1 < ../device/ti/beagleboneblack/kernel-patches/0001-Reboot-reason-flags-for-BBB.patch
@@ -129,7 +129,7 @@ Otherwise, if installing to an SD card use the U-Boot from Rowboat.
 Get and build it like so:
 ```
 $ cd ~/aosp
-$ git clone git://gitorious.org/rowboat/u-boot
+$ git clone https://github.com/csimmonds/u-boot
 $ cd u-boot
 $ git checkout am335x-v2013.01.01
 $ make CROSS_COMPILE=arm-eabi- distclean
@@ -147,7 +147,7 @@ has some paths hard coded which is why it has to be put into `hardware/ti/sgx`,
 and also why the kernel has to be in `directory kernel/`.
 ```
 $ cd ~/aosp/hardware/ti
-$ git clone git://git.gitorious.org/rowboat/hardware-ti-sgx.git sgx
+$ git clone https://github.com/csimmonds/hardware-ti-sgx
 $ cd sgx
 $ git checkout ti_sgx_sdk-ddk_1.10-jb-4.3
 ```
