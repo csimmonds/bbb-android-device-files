@@ -92,11 +92,11 @@ echo "Partitioning $device"
 sudo dd if=/dev/zero of=/dev/$device bs=512 count=1
 sync
 sleep 4
-sudo sfdisk -D -u M /dev/${device} << EOF
-0,32,0x0C,*
-,512,,,
-,512,,,
-,256,,,
+sudo sfdisk /dev/${device} << EOF
+start=1,size=32M,type=a,bootable,name=boot
+size=512M,type=83,name=system
+size=512M,type=83,name=userdata
+size=256M,type=83,name=cache
 EOF
 if [ $? != 0 ]; then echo "ERROR"; exit; fi
 
