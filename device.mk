@@ -1,5 +1,6 @@
 #
 # Copyright (C) 2011 The Android Open-Source Project
+# Copyright (C) 2015 Chris Simmonds, chris@2net.co.uk
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,18 +14,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-ifeq ($(TARGET_PREBUILT_KERNEL),)
-LOCAL_KERNEL := device/ti/beagleboneblack/kernel
+ifneq ($(filter beagleboneblack_sd, $(TARGET_PRODUCT)),)
+PRODUCT_COPY_FILES := \
+        device/ti/beagleboneblack/fstab.am335xevm-sd:root/fstab.am335xevm
 else
-LOCAL_KERNEL := $(TARGET_PREBUILT_KERNEL)
+PRODUCT_COPY_FILES := \
+	device/ti/beagleboneblack/kernel:kernel \
+        device/ti/beagleboneblack/fstab.am335xevm:root/fstab.am335xevm
 endif
 
-PRODUCT_COPY_FILES := \
-	$(LOCAL_KERNEL):kernel \
+PRODUCT_COPY_FILES += \
 	device/ti/beagleboneblack/init.am335xevm.rc:root/init.am335xevm.rc \
 	device/ti/beagleboneblack/init.am335xevm.usb.rc:root/init.am335xevm.usb.rc \
 	device/ti/beagleboneblack/vold.fstab:system/etc/vold.fstab \
-	device/ti/beagleboneblack/fstab.am335xevm:root/fstab.am335xevm \
 	device/ti/beagleboneblack/ueventd.am335xevm.rc:root/ueventd.am335xevm.rc \
 	device/ti/beagleboneblack/media_codecs.xml:system/etc/media_codecs.xml \
 	device/ti/beagleboneblack/media_profiles.xml:system/etc/media_profiles.xml \
@@ -41,8 +43,9 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/gpio-keys.kl:system/usr/keylayout/gpio-keys.kl \
     $(LOCAL_PATH)/ti-tsc.idc:system/usr/idc/ti-tsc.idc
 
+# BeagleBone Black only has 512 MiB RAM
 PRODUCT_PROPERTY_OVERRIDES := \
-       hwui.render_dirty_regions=false
+      ro.config.low_ram=true
 
 # Explicitly specify dpi, otherwise the icons don't show up correctly with SGX enabled
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -94,5 +97,6 @@ ifneq ($(wildcard device/ti/beagleboneblack/sgx/system),)
     $(call inherit-product, device/ti/beagleboneblack/device-sgx.mk)
 endif
 
-# Provides overrides to configure the Dalvik heap for a standard tablet device
-$(call inherit-product, frameworks/native/build/tablet-dalvik-heap.mk)
+# Configure the Dalvik heap for a device with 512 MiB RAM
+$(call inherit-product, frameworks/native/build/phone-hdpi-512-dalvik-heap.mk)
+

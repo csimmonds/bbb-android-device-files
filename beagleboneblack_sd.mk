@@ -1,5 +1,5 @@
-#
-# Copyright (C) 2011 The Android Open-Source Project
+# Copyright (C) 2011 The Android Open Source Project
+# Copyright (C) 2015 Chris Simmonds, chris@2net.co.uk
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,6 +12,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
 
-PRODUCT_MAKEFILES := $(LOCAL_DIR)/beagleboneblack.mk $(LOCAL_DIR)/beagleboneblack_sd.mk
+# Inherit from those products. Most specific first.
+$(call inherit-product, $(SRC_TARGET_DIR)/product/full_base.mk)
+$(call inherit-product, device/ti/beagleboneblack/device.mk)
+
+PRODUCT_NAME := beagleboneblack_sd
+PRODUCT_DEVICE := beagleboneblack
+PRODUCT_BRAND := Android
+PRODUCT_MODEL :=  BeagleBone Black on SD card
+PRODUCT_MANUFACTURER := TI
