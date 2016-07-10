@@ -84,7 +84,7 @@ PRODUCT_PACKAGES += \
 
 # Backlight HAL (liblights)
 PRODUCT_PACKAGES += \
-	lights.beagleboneblack
+	lights.am335xevm
 
 PRODUCT_PACKAGES += \
 	androidvncserver
